@@ -1,0 +1,79 @@
+#!/home/.../python3 copy your link to environment with installed pandaswq
+
+
+
+
+import sys
+import os
+try:
+    import pandas
+except ModuleNotFoundError:
+	print("Module pandas required error.")
+	exit()
+
+
+
+
+
+def arguments_checker(argvs):
+
+    if not 2 <= len(argvs) <= 3:
+        print("Amount of arguments error.\nTry pklview -h")
+        exit()
+
+    if argvs[1] in ("help", "-h", "--h", "--help"):
+        print("Pickle Viewer shows Pandas pickle dataframe in terminal.\n Requests pandas for work.\n Also 3 arguments are possible:\n -h or head for first 5 rows of dataframe\n -t or tail for last 5 rows\n -f or full for full dataframe.")
+        exit()
+
+    if len(argvs) == 3:
+        if argvs[2] not in ("-h", "head", "-t", "tail", "-f", "full"):
+            print("Last argument error.")
+        else:
+            return True
+
+    else:
+        return True
+
+
+
+def file_checker(path):
+
+    if not os.path.exists(path):
+        print("File not found error.")
+        exit()
+
+    if not os.path.splitext(path)[1] == ".pkl":
+        print("Wrong extention type error.")
+        exit()
+
+    else:
+        return True
+
+
+
+def printer(argvs):
+
+    if len(argvs) == 2:
+        print(pandas.read_pickle(argvs[1]))
+        exit()
+
+    if argvs[2] in ("-h", "head"):
+        print(pandas.read_pickle(f"{argvs[1]}").head())
+        exit()
+
+    if argvs[2] in ("-t", "tail"):
+        print(pandas.read_pickle(f"{argvs[1]}").tail())
+        exit()
+
+    if argvs[2] in ("-f", "full"):
+        pandas.set_option('display.max_rows', None)
+        print(pandas.read_pickle(argvs[1]))
+
+    else:
+        print("Some unexpected error")
+        exit()
+
+
+if __name__ == "__main__":
+    if (arguments_checker(sys.argv) and file_checker(sys.argv[1])):
+        printer(sys.argv)
